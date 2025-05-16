@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontak | HM Downloader</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #e1eaff);
+      color: #333;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #2b50ec;
+      position: relative;
+    }
+
+    header h1::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background-color: #2b50ec;
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #2b50ec;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1d39c4;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .whatsapp-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      background-color: #25d366;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-decoration: none;
+      width: 100%;
+      max-width: 350px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .whatsapp-link:hover {
+      background-color: #128c7e;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Kontak Kami</h1>
+  </header>
+  <main>
+    <p>Jika Anda memiliki pertanyaan, saran, atau ingin bekerja sama, silakan hubungi kami melalui formulir di bawah ini atau kirim pesan langsung ke WhatsApp kami.</p>
+
+    <form action="https://formspree.io/f/your-form-id" method="POST">
+      <label for="nama">Nama</label>
+      <input type="text" id="nama" name="nama" placeholder="Nama Anda" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="email@contoh.com" required />
+
+      <label for="pesan">Pesan</label>
+      <textarea id="pesan" name="pesan" placeholder="Tulis pesan Anda di sini..." required></textarea>
+
+      <button type="submit">Kirim Pesan</button>
+    </form>
+
+    <a href="https://wa.me/62895326884022?text=Pesan%20dari%20HM%20Downloader" class="whatsapp-link" target="_blank">Kirim Pesan via WhatsApp</a>
+  </main>
+  <footer>
+    <p>&copy; 2025 HM Downloader. Semua hak cipta dilindungi.</p>
+  </footer>
+</body>
+</html>

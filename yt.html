@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HMDownload - Download Video YouTube</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #FF3E3E;
+      --primary-dark: #D32F2F;
+      --secondary: #4285F4;
+      --dark: #202124;
+      --light: #f8f9fa;
+      --gray: #5f6368;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+    
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .header i {
+      font-size: 1.8rem;
+    }
+    
+    .content {
+      padding: 1.5rem;
+    }
+    
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .input-group i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.5rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 62, 62, 0.2);
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--primary);
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn i {
+      font-size: 1.2rem;
+    }
+    
+    #preview {
+      margin-top: 1.5rem;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .thumbnail-container {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    #thumbnail {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    
+    .thumbnail-container:hover #thumbnail {
+      transform: scale(1.03);
+    }
+    
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.8);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .thumbnail-container:hover .play-icon {
+      opacity: 1;
+    }
+    
+    .video-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    
+    .btn-group .btn {
+      flex: 1;
+    }
+    
+    .btn-audio {
+      background: var(--secondary);
+    }
+    
+    .btn-audio:hover {
+      background: #3367D6;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border: 4px solid rgba(255, 62, 62, 0.2);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: var(--gray);
+      font-size: 0.8rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .header {
+        padding: 1rem;
+      }
+      
+      .content {
+        padding: 1rem;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <div class="header">
+      <h1><i class="fab fa-youtube"></i> YouTube Downloader</h1>
+    </div>
+    
+    <div class="content">
+      <div class="input-group">
+        <i class="fas fa-link"></i>
+        <input type="text" id="url" placeholder="Tempel link YouTube di sini...">
+      </div>
+      
+      <button class="btn" onclick="getDownload()">
+        <i class="fas fa-download"></i> Download
+      </button>
+      
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Memproses video...</p>
+      </div>
+      
+      <div id="preview">
+        <div class="thumbnail-container">
+          <img id="thumbnail" src="" alt="Thumbnail">
+          <div class="play-icon">
+            <i class="fas fa-play"></i>
+          </div>
+        </div>
+        
+        <div class="video-title" id="title"></div>
+        
+        <div class="btn-group">
+          <button class="btn" id="download-video">
+            <i class="fas fa-film"></i> Video
+          </button>
+          <button class="btn btn-audio" id="download-audio">
+            <i class="fas fa-music"></i> Audio
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>HMDownload &copy; 2025 - Download video YouTube dengan cepat dan mudah</p>
+  </div>
+</div>
+
+<script>
+function getDownload() {
+  const url = document.getElementById('url').value.trim();
+  if (!url) {
+    alert("Silahkan masukkan URL YouTube terlebih dahulu!");
+    return;
+  }
+
+  // Tampilkan loading
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('preview').style.display = 'none';
+
+  // API untuk ambil video
+  const videoApi = `https://ytdlpyton.nvlgroup.my.id/download/?url=${encodeURIComponent(url)}&resolution=720&mode=url`;
+  // API untuk ambil audio
+  const audioApi = `https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(url)}`;
+
+  // Gunakan Promise.all untuk menunggu kedua request selesai
+  Promise.all([
+    fetch(videoApi).then(res => res.json()),
+    fetch(audioApi).then(res => res.json())
+  ])
+  .then(([video, audio]) => {
+    // Sembunyikan loading
+    document.getElementById('loading').style.display = 'none';
+    
+    if (video && video.thumbnail && video.title) {
+      document.getElementById('thumbnail').src = video.thumbnail;
+      document.getElementById('title').innerText = video.title;
+      document.getElementById('preview').style.display = 'block';
+      
+      document.getElementById('download-video').onclick = () => {
+        window.open(video.download_url, '_blank');
+      };
+    } else {
+      throw new Error('Video tidak ditemukan!');
+    }
+    
+    if (audio && audio.data && audio.data.dl) {
+      document.getElementById('download-audio').onclick = () => {
+        window.open(audio.data.dl, '_blank');
+      };
+    } else {
+      throw new Error('Audio tidak ditemukan!');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById('loading').style.display = 'none';
+    alert('Gagal mengambil data. Pastikan URL YouTube valid.');
+  });
+}
+
+// Tambahkan event listener untuk tombol enter
+document.getElementById('url').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    getDownload();
+  }
+});
+</script>
+
+</body>
+</html>

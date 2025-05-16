@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMDownload - Download Facebook Videos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1877F2;
+      --primary-dark: #166FE5;
+      --secondary: #42B72A;
+      --dark: #1C1E21;
+      --light: #FFFFFF;
+      --gray: #65676B;
+      --bg: #F0F2F5;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5rem 1rem 2rem; /* Padding atas dikurangi */
+      color: var(--dark);
+    }
+    
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin-top: 1rem; /* Margin atas dikurangi */
+    }
+    
+    .card {
+      background: var(--light);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 1.2rem; /* Padding header dikurangi */
+      text-align: center;
+      position: relative;
+    }
+    
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+    
+    .header i {
+      font-size: 1.8rem;
+    }
+    
+    .content {
+      padding: 1.2rem; /* Padding content dikurangi */
+    }
+    
+    .input-group {
+      position: relative;
+      margin-bottom: 1rem; /* Margin bawah input dikurangi */
+    }
+    
+    .input-group i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.8rem; /* Padding input disesuaikan */
+      border: 2px solid #E4E6EB;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: #F0F2F5;
+    }
+    
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+      background: var(--light);
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--primary);
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    #result {
+      margin-top: 1.2rem; /* Margin atas result dikurangi */
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .media-container {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.2rem; /* Margin bawah media dikurangi */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    #fb-video {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+    
+    .download-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.2rem; /* Margin atas download options dikurangi */
+    }
+    
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem;
+      background: var(--secondary);
+      color: white;
+      font-weight: 500;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .download-btn:hover {
+      background: #36A420;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .download-btn i {
+      font-size: 1.2rem;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 1rem 0; /* Margin loading disesuaikan */
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border: 4px solid rgba(24, 119, 242, 0.2);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .error {
+      color: #F02849;
+      text-align: center;
+      margin-top: 0.8rem; /* Margin atas error dikurangi */
+      font-weight: 500;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem; /* Margin atas footer dikurangi */
+      color: var(--gray);
+      font-size: 0.8rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem 0.8rem 1.5rem; /* Padding mobile disesuaikan */
+      }
+      
+      .container {
+        margin-top: 0.5rem; /* Margin atas mobile dikurangi */
+      }
+      
+      .header {
+        padding: 1rem;
+      }
+      
+      .content {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <div class="header">
+      <h1><i class="fab fa-facebook"></i> Facebook Downloader</h1>
+    </div>
+    
+    <div class="content">
+      <div class="input-group">
+        <i class="fas fa-link"></i>
+        <input type="text" id="fbUrl" placeholder="Tempel link video Facebook di sini" autocomplete="off">
+      </div>
+      
+      <button class="btn" onclick="downloadFB()">
+        <i class="fas fa-download"></i> Download Video
+      </button>
+      
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Mencari video...</p>
+      </div>
+      
+      <div id="result" class="result">
+        <div class="media-container">
+          <video id="fb-video" controls></video>
+        </div>
+        
+        <div class="download-options">
+          <a id="downloadLink" class="download-btn" download>
+            <i class="fas fa-download"></i>
+            <span>Download Video</span>
+          </a>
+        </div>
+      </div>
+      
+      <div id="error" class="error"></div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>HMDownload &copy; 2025 - Download video Facebook dengan mudah</p>
+  </div>
+</div>
+
+<script>
+async function downloadFB() {
+  const urlInput = document.getElementById('fbUrl').value.trim();
+  const resultDiv = document.getElementById('result');
+  const errorDiv = document.getElementById('error');
+  const loadingDiv = document.getElementById('loading');
+  
+  // Reset state
+  resultDiv.style.display = 'none';
+  errorDiv.textContent = '';
+  
+  if (!urlInput) {
+    errorDiv.textContent = "Masukkan URL video Facebook terlebih dahulu";
+    return;
+  }
+
+  // Show loading
+  loadingDiv.style.display = 'block';
+
+  try {
+    // Coba API Agat terlebih dahulu
+    const res = await fetch(`https://api.agatz.xyz/api/facebook?url=${encodeURIComponent(urlInput)}`);
+    const data = await res.json();
+
+    if (data.status === 200 && data.data.hd) {
+      // Jika API Agat berhasil
+      const videoUrl = data.data.hd;
+      showResult(videoUrl);
+    } else {
+      // Jika API Agat gagal, coba API Siputz
+      const res2 = await fetch(`https://api.siputzx.my.id/api/d/facebook?url=${encodeURIComponent(urlInput)}`);
+      const data2 = await res2.json();
+
+      if (data2.status === true && data2.data.length > 0) {
+        // Jika API Siputz berhasil
+        const videoUrl = data2.data[0].url;
+        showResult(videoUrl);
+      } else {
+        throw new Error("Video tidak ditemukan di kedua API");
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    errorDiv.textContent = "Gagal mengambil video. Pastikan URL valid dan coba lagi.";
+  } finally {
+    loadingDiv.style.display = 'none';
+  }
+
+  function showResult(videoUrl) {
+    const videoElement = document.getElementById('fb-video');
+    const downloadLink = document.getElementById('downloadLink');
+    
+    // Set video source
+    videoElement.innerHTML = `<source src="${videoUrl}" type="video/mp4">`;
+    videoElement.load();
+    
+    // Set download link
+    downloadLink.href = videoUrl;
+    downloadLink.setAttribute('download', 'facebook-video.mp4');
+    
+    // Show result
+    resultDiv.style.display = 'block';
+  }
+}
+
+// Tambahkan event listener untuk tombol enter
+document.getElementById('fbUrl').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    downloadFB();
+  }
+});
+</script>
+
+</body>
+</html>
